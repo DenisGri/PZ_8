@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Documents;
 
-namespace PZ_7
+namespace PZ_8
 {
     [Serializable]
     public struct Student : INotifyPropertyChanged
@@ -43,7 +43,7 @@ namespace PZ_7
                 NotifyPropertyChanged();
             }
         }
-        
+
         public string GetStringScores => string.Join(',', _scores);
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = null)

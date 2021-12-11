@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 
-namespace PZ_7;
+namespace PZ_8;
 
 [Serializable]
 public class ObservableData

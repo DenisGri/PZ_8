@@ -9,13 +9,13 @@ using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
-namespace PZ_7;
+namespace PZ_8;
 
 public static class FileRW
 {
     public static ObservableCollection<Student> ReadFromFile()
     {
-        OpenFileDialog openFileDialog = new OpenFileDialog
+        var openFileDialog = new OpenFileDialog
         {
             Multiselect = false,
             Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*"
@@ -25,8 +25,8 @@ public static class FileRW
         var path = Path.GetFullPath(openFileDialog.FileName);
         try
         {
-            JsonSerializer serializer = new JsonSerializer();
-            using StreamReader sr = new StreamReader(path);
+            var serializer = new JsonSerializer();
+            using var sr = new StreamReader(path);
             using JsonReader reader = new JsonTextReader(sr);
 
             var data = serializer.Deserialize<ObservableCollection<Student>>(reader);
@@ -38,13 +38,11 @@ public static class FileRW
             MessageBox.Show("Ошибка чтения выбранного файла");
             return null;
         }
-
-        return null;
     }
 
     public static void WriteToFile(ObservableCollection<Student> oData)
     {
-        SaveFileDialog saveFileDialog = new SaveFileDialog
+        var saveFileDialog = new SaveFileDialog
         {
             Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*",
             Title = "Students.txt",
@@ -54,8 +52,8 @@ public static class FileRW
         if (saveFileDialog.ShowDialog() == true)
         {
             var path = Path.GetFullPath(saveFileDialog.FileName);
-            JsonSerializer serializer = new JsonSerializer();
-            using StreamWriter sw = new StreamWriter(path);
+            var serializer = new JsonSerializer();
+            using var sw = new StreamWriter(path);
             using JsonWriter writer = new JsonTextWriter(sw);
             serializer.Serialize(writer, oData);
         }

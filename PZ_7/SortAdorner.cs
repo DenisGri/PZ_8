@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace PZ_7;
+namespace PZ_8;
 
 public class SortAdorner : Adorner
 {
@@ -15,7 +15,7 @@ public class SortAdorner : Adorner
 
     public SortAdorner(UIElement element, ListSortDirection dir) : base(element)
     {
-        this.Direction = dir;
+        Direction = dir;
     }
 
     protected override void OnRender(DrawingContext drawingContext)
@@ -24,12 +24,12 @@ public class SortAdorner : Adorner
 
         if (AdornedElement.RenderSize.Width < 20) return;
 
-        TranslateTransform transform = new TranslateTransform(AdornedElement.RenderSize.Width - 15,
+        var transform = new TranslateTransform(AdornedElement.RenderSize.Width - 15,
             (AdornedElement.RenderSize.Height - 5) / 2);
         drawingContext.PushTransform(transform);
 
-        Geometry geometry = ascGeometry;
-        if (this.Direction == ListSortDirection.Descending) geometry = descGeometry;
+        var geometry = ascGeometry;
+        if (Direction == ListSortDirection.Descending) geometry = descGeometry;
         drawingContext.DrawGeometry(Brushes.Black, null, geometry);
 
         drawingContext.Pop();

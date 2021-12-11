@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PZ_8;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -22,10 +23,10 @@ namespace PZ_7
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ObservableData _observableData = new ObservableData();
-        private ObservableData _observableDataBackUp = new ObservableData();
-        private GridViewColumnHeader listViewSortCol = null;
-        private SortAdorner listViewSortAdorner = null;
+        private readonly ObservableData _observableData = new ObservableData();
+        private readonly ObservableData _observableDataBackUp = new ObservableData();
+        private GridViewColumnHeader _listViewSortCol = null;
+        private SortAdorner _listViewSortAdorner = null;
 
         public MainWindow()
         {
@@ -41,68 +42,65 @@ namespace PZ_7
                 _observableDataBackUp.Students.Add(student);
             }
         }
+
         private void FilteredLV_LNameChanged(object sender, TextChangedEventArgs e)
         {
             if (cbFilter.SelectedIndex == -1) return;
             BackUpStudents();
-            List<Student>? TempFiltered = null;
+            List<Student>? tempFiltered = null;
 
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
                 {
-                    TempFiltered = _observableData.Students.Where(stu =>
+                    tempFiltered = _observableData.Students.Where(stu =>
                             stu.Fio.Contains(tbFilter.Text, StringComparison.InvariantCultureIgnoreCase))
                         .ToList();
                     break;
                 }
                 case 1:
                 {
-                    TempFiltered = _observableData.Students.Where(stu =>
+                    tempFiltered = _observableData.Students.Where(stu =>
                             stu.Group.Contains(tbFilter.Text, StringComparison.InvariantCultureIgnoreCase))
                         .ToList();
                     break;
                 }
                 case 2:
                 {
-
-                    TempFiltered = _observableData.Students.Where(stu =>
+                    tempFiltered = _observableData.Students.Where(stu =>
                             stu.GetStringScores.Contains(tbFilter.Text, StringComparison.InvariantCultureIgnoreCase))
                         .ToList();
                     break;
-                    }
+                }
                 default:
                     break;
             }
 
-            for (int i = _observableData.Students.Count - 1; i >= 0; i--)
+            for (var i = _observableData.Students.Count - 1; i >= 0; i--)
             {
                 var item = _observableData.Students[i];
-                if (!TempFiltered!.Contains(item))
+                if (!tempFiltered!.Contains(item))
                 {
                     _observableData.Students.Remove(item);
                 }
             }
 
-            foreach (var item in TempFiltered!)
+            foreach (var item in tempFiltered!.Where(item => !_observableData.Students.Contains(item)))
             {
-                if (!_observableData.Students.Contains(item))
-                {
-                    _observableData.Students.Add(item);
-                }
+                _observableData.Students.Add(item);
             }
         }
 
         private void AddStudent_OnClick(object sender, RoutedEventArgs e)
         {
             BackUpStudents();
-            Student newStudent = new Student();
-            SubWindow sub = new SubWindow();
+            var newStudent = new Student();
+            var sub = new SubWindow();
             if (sub.ShowDialog() == true)
             {
                 newStudent.Fio = sub.Fio;
                 newStudent.Group = sub.Group;
-                for (int i = 0; i < newStudent.Scores.Length; i++)
+                for (var i = 0; i < newStudent.Scores.Length; i++)
                 {
                     newStudent.Scores[i] = sub.Scores[i];
                 }
@@ -139,13 +137,9 @@ namespace PZ_7
             var students = new ObservableCollection<Student>();
             foreach (var student in _observableData.Students)
             {
-                for (int i = 0; i < student.Scores.Length; i++)
+                if (student.Scores.Any(t => t >= 9))
                 {
-                    if (student.Scores[i] >= 9)
-                    {
-                        students.Add(student);
-                        break;
-                    }
+                    students.Add(student);
                 }
             }
 
@@ -165,24 +159,23 @@ namespace PZ_7
 
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
-
-            GridViewColumnHeader? column = sender as GridViewColumnHeader;
-            string sortBy = column.Tag.ToString();
-            if (listViewSortCol != null)
+            var column = sender as GridViewColumnHeader;
+            var sortBy = column.Tag.ToString();
+            if (_listViewSortCol != null)
             {
-                AdornerLayer.GetAdornerLayer(listViewSortCol)?.Remove(listViewSortAdorner);
+                AdornerLayer.GetAdornerLayer(_listViewSortCol)?.Remove(_listViewSortAdorner);
                 lvStudents.Items.SortDescriptions.Clear();
             }
 
-            ListSortDirection newDirection = ListSortDirection.Ascending;
-            if (listViewSortCol == column && listViewSortAdorner.Direction == newDirection)
+            var newDirection = ListSortDirection.Ascending;
+            if (_listViewSortCol == column && _listViewSortAdorner.Direction == newDirection)
             {
                 newDirection = ListSortDirection.Descending;
             }
 
-            listViewSortCol = column;
-            listViewSortAdorner = new SortAdorner(listViewSortCol, newDirection);
-            AdornerLayer.GetAdornerLayer(listViewSortCol)?.Add(listViewSortAdorner);
+            _listViewSortCol = column;
+            _listViewSortAdorner = new SortAdorner(_listViewSortCol, newDirection);
+            AdornerLayer.GetAdornerLayer(_listViewSortCol)?.Add(_listViewSortAdorner);
             lvStudents.Items.SortDescriptions.Add(new SortDescription(sortBy, newDirection));
         }
 
