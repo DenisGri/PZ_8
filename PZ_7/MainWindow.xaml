@@ -21,8 +21,12 @@
                 <MenuItem Name="DeleteStudent" Header="Удалить выбранного студента" Click="DeleteStudent_OnClick"></MenuItem>
                 <MenuItem Name="GoodStudents" Header="Показать студентов с оценками 9 и 10" Click="GoodStudents_OnClick"></MenuItem>
             </MenuItem>
-            <TextBox Name="tbFilter" TextWrapping="Wrap" Text="" Width="120"/>
-            <ComboBox Name="cbFilter" Width="120"/>
+            <TextBox Name="tbFilter" TextWrapping="Wrap" TextChanged="FilteredLV_LNameChanged" Text="" Width="120"/>
+            <ComboBox Name="cbFilter" Width="120" FontSize="11">
+                <ComboBoxItem Name="biFio" Content="ФИО"></ComboBoxItem>
+                <ComboBoxItem Name="biGroup" Content="Группа"></ComboBoxItem>
+                <ComboBoxItem Name="biScores" Content="Оценки"></ComboBoxItem>
+            </ComboBox>
         </Menu>
         <ListView Name="lvStudents" Margin="-1,25,1,0" >
             <ListView.View>

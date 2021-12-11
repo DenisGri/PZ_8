@@ -32,17 +32,55 @@ namespace PZ_7
             lvStudents.ItemsSource = _observableData.Students;
         }
 
-        string FindElement(string criterion)
+        private void FilteredLV_LNameChanged(object sender, TextChangedEventArgs e)
         {
-            switch (criterion)
+            if (cbFilter.SelectedIndex == -1) return;
+            List<Student> TempFiltered = null;
+
+            switch (cbFilter.SelectedIndex)
             {
-                default:
+                case 0:
                 {
+                    TempFiltered = _observableData.Students.Where(stu =>
+                            stu.Fio.Contains(tbFilter.Text, StringComparison.InvariantCultureIgnoreCase))
+                        .ToList();
                     break;
+                }
+                case 1:
+                {
+                    TempFiltered = _observableData.Students.Where(stu =>
+                            stu.Group.Contains(tbFilter.Text, StringComparison.InvariantCultureIgnoreCase))
+                        .ToList();
+                    break;
+                }
+                case 2:
+                {
+
+                    TempFiltered = _observableData.Students.Where(stu =>
+                            stu.GetStringScores.Contains(tbFilter.Text, StringComparison.InvariantCultureIgnoreCase))
+                        .ToList();
+                    break;
+                    }
+                default:
+                    break;
+            }
+
+            for (int i = _observableData.Students.Count - 1; i >= 0; i--)
+            {
+                var item = _observableData.Students[i];
+                if (!TempFiltered.Contains(item))
+                {
+                    _observableData.Students.Remove(item);
                 }
             }
 
-            return string.Empty;
+            foreach (var item in TempFiltered)
+            {
+                if (!_observableData.Students.Contains(item))
+                {
+                    _observableData.Students.Add(item);
+                }
+            }
         }
 
         private void AddStudent_OnClick(object sender, RoutedEventArgs e)
