@@ -1,57 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Documents;
 
 namespace PZ_7
 {
-    public readonly struct Student
+    [Serializable]
+    public struct Student : INotifyPropertyChanged
     {
-        private readonly string _fio;
-        private readonly string _group;
-        private readonly int[] _scores = new int[5];
+        private string _fio;
+        private string _group;
+        private int[] _scores = new int[5];
 
-        public Student(string fio, string group, int[] scores)
+        public string Fio
         {
-            _fio = fio;
-            _group = group;
-            _scores = scores;
+            get => _fio;
+            set
+            {
+                _fio = value;
+                NotifyPropertyChanged();
+            }
         }
 
-        public string? GetFio => _fio;
-        public string? GetGroup => _group;
-        public string? GetScores => string.Join(",", _scores);
-
-        public static List<Student> StudentList { get; set; } = GetStudents();
-
-        public static List<Student> GetStudents()
+        public string Group
         {
-            List<Student> ss = new List<Student>();
-            Student student1 = new Student("Kent C.K.", "55555", new[] {6, 7, 8, 9, 10});
-            Student student2 = new Student("Kent K.C.", "12345", new[] {1, 2, 3, 4, 5});
-            ss.Add(student1);
-            ss.Add(student2);
-            ss.Add(student1);
-            ss.Add(student1);
-            ss.Add(student2);
-            StudentList = ss;
-            return ss;
+            get => _group;
+            set
+            {
+                _group = value;
+                NotifyPropertyChanged();
+            }
         }
 
-        public static List<Student> AddStudent(Student student)
+        public int[] Scores
         {
-            StudentList.Add(student);
+            get => _scores;
+            set
+            {
+                _scores = value;
+                NotifyPropertyChanged();
+            }
+        }
+        
+        public string GetStringScores => string.Join(',', _scores);
 
-            return StudentList;
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public List<Student> ShowHighScoreStudents(List<Student> rawList)
-        {
-            var highScoreStudents = new List<Student>();
-            if (highScoreStudents == null) throw new ArgumentNullException(nameof(highScoreStudents));
-            highScoreStudents.AddRange(rawList.Where(student => student._scores.Any(score => score >= 9)));
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-            return highScoreStudents;
-        }
     }
 }

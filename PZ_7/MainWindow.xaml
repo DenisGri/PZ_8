@@ -5,26 +5,43 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PZ_7"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="MainWindow" Height="450" Width="800">
     <Window.DataContext>
         <local:Student/>
     </Window.DataContext>
     <Grid Background="Lavender">
         <Menu Height="20" VerticalAlignment="Top">
-            <MenuItem Header="File">
-                <MenuItem Header="Open File"></MenuItem>
-                <MenuItem Header="Save File"></MenuItem>
+            <MenuItem Header="Файл">
+                <MenuItem Name="OpenFile" Header="Открыть файл" Click="OpenFile_OnClick"></MenuItem>
+                <MenuItem Name="SaveFile" Header="Сохранить файл" Click="SaveFile_OnClick"></MenuItem>
             </MenuItem>
             <MenuItem Header="Students">
-                <MenuItem Name="AddStudent" Header="Add new student" Click="AddStudent_OnClick"></MenuItem>
+                <MenuItem Name="AddStudent" Header="Добавить студента" Click="AddStudent_OnClick"></MenuItem>
+                <MenuItem Name="DeleteStudent" Header="Удалить выбранного студента" Click="DeleteStudent_OnClick"></MenuItem>
+                <MenuItem Name="GoodStudents" Header="Показать студентов с оценками 9 и 10" Click="GoodStudents_OnClick"></MenuItem>
             </MenuItem>
+            <TextBox Name="tbFilter" TextWrapping="Wrap" Text="" Width="120"/>
+            <ComboBox Name="cbFilter" Width="120"/>
         </Menu>
-        <ListView Name="lvStudents" ItemsSource="{Binding StudentList, BindsDirectlyToSource=True, Mode=TwoWay}" Margin="-1,25,1,0" IsSynchronizedWithCurrentItem="False">
+        <ListView Name="lvStudents" Margin="-1,25,1,0" >
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding GetFio}" Header="ФИО"></GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding GetGroup}" Header="Группа"></GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding GetScores}" Header="Оценки"></GridViewColumn>
+                    <GridViewColumn Width="90" DisplayMemberBinding="{Binding Fio}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Fio" Click="lvUsersColumnHeader_Click">ФИО</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="90" DisplayMemberBinding="{Binding Group}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Group" Click="lvUsersColumnHeader_Click">Группа</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="90" DisplayMemberBinding="{Binding GetStringScores}" >
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="GetStringScores" Click="lvUsersColumnHeader_Click">Оценки</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
