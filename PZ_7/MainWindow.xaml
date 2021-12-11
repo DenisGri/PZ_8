@@ -16,10 +16,11 @@
                 <MenuItem Name="OpenFile" Header="Открыть файл" Click="OpenFile_OnClick"></MenuItem>
                 <MenuItem Name="SaveFile" Header="Сохранить файл" Click="SaveFile_OnClick"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Students">
+            <MenuItem Header="Студенты">
                 <MenuItem Name="AddStudent" Header="Добавить студента" Click="AddStudent_OnClick"></MenuItem>
                 <MenuItem Name="DeleteStudent" Header="Удалить выбранного студента" Click="DeleteStudent_OnClick"></MenuItem>
                 <MenuItem Name="GoodStudents" Header="Показать студентов с оценками 9 и 10" Click="GoodStudents_OnClick"></MenuItem>
+                <MenuItem Name="Undo" Header="Оменить предыдущее изменение" Click="Undo_OnClick"></MenuItem>
             </MenuItem>
             <TextBox Name="tbFilter" TextWrapping="Wrap" TextChanged="FilteredLV_LNameChanged" Text="" Width="120"/>
             <ComboBox Name="cbFilter" Width="120" FontSize="11">

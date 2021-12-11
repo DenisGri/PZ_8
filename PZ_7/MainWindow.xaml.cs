@@ -22,7 +22,8 @@ namespace PZ_7
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly ObservableData _observableData = new ObservableData();
+        private ObservableData _observableData = new ObservableData();
+        private ObservableData _observableDataBackUp = new ObservableData();
         private GridViewColumnHeader listViewSortCol = null;
         private SortAdorner listViewSortAdorner = null;
 
@@ -32,10 +33,19 @@ namespace PZ_7
             lvStudents.ItemsSource = _observableData.Students;
         }
 
+        private void BackUpStudents()
+        {
+            _observableDataBackUp.Students.Clear();
+            foreach (var student in _observableData.Students)
+            {
+                _observableDataBackUp.Students.Add(student);
+            }
+        }
         private void FilteredLV_LNameChanged(object sender, TextChangedEventArgs e)
         {
             if (cbFilter.SelectedIndex == -1) return;
-            List<Student> TempFiltered = null;
+            BackUpStudents();
+            List<Student>? TempFiltered = null;
 
             switch (cbFilter.SelectedIndex)
             {
@@ -68,13 +78,13 @@ namespace PZ_7
             for (int i = _observableData.Students.Count - 1; i >= 0; i--)
             {
                 var item = _observableData.Students[i];
-                if (!TempFiltered.Contains(item))
+                if (!TempFiltered!.Contains(item))
                 {
                     _observableData.Students.Remove(item);
                 }
             }
 
-            foreach (var item in TempFiltered)
+            foreach (var item in TempFiltered!)
             {
                 if (!_observableData.Students.Contains(item))
                 {
@@ -85,6 +95,7 @@ namespace PZ_7
 
         private void AddStudent_OnClick(object sender, RoutedEventArgs e)
         {
+            BackUpStudents();
             Student newStudent = new Student();
             SubWindow sub = new SubWindow();
             if (sub.ShowDialog() == true)
@@ -102,11 +113,13 @@ namespace PZ_7
 
         private void DeleteStudent_OnClick(object sender, RoutedEventArgs e)
         {
+            BackUpStudents();
             _observableData.Students.RemoveAt(lvStudents.SelectedIndex);
         }
 
         private void OpenFile_OnClick(object sender, RoutedEventArgs e)
         {
+            BackUpStudents();
             _observableData.Students.Clear();
             var data = FileRW.ReadFromFile();
             foreach (var s in data)
@@ -122,6 +135,7 @@ namespace PZ_7
 
         private void GoodStudents_OnClick(object sender, RoutedEventArgs e)
         {
+            BackUpStudents();
             var students = new ObservableCollection<Student>();
             foreach (var student in _observableData.Students)
             {
@@ -151,6 +165,7 @@ namespace PZ_7
 
         private void lvUsersColumnHeader_Click(object sender, RoutedEventArgs e)
         {
+
             GridViewColumnHeader? column = sender as GridViewColumnHeader;
             string sortBy = column.Tag.ToString();
             if (listViewSortCol != null)
@@ -169,6 +184,15 @@ namespace PZ_7
             listViewSortAdorner = new SortAdorner(listViewSortCol, newDirection);
             AdornerLayer.GetAdornerLayer(listViewSortCol)?.Add(listViewSortAdorner);
             lvStudents.Items.SortDescriptions.Add(new SortDescription(sortBy, newDirection));
+        }
+
+        private void Undo_OnClick(object sender, RoutedEventArgs e)
+        {
+            _observableData.Students.Clear();
+            foreach (var student in _observableDataBackUp.Students)
+            {
+                _observableData.Students.Add(student);
+            }
         }
     }
 }

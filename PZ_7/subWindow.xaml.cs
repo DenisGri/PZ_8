@@ -25,9 +25,17 @@ namespace PZ_7
 
         private int[] StrToIntArray(string str)
         {
-            var ia = str.Split(';', '.', ',', ' ').Select(n => Convert.ToInt32(n)).ToArray();
+            try
+            {
+                var ia = str.Split(';', '.', ',', ' ').Select(n => Convert.ToInt32(n)).ToArray();
+                return ia;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Только цифры разделенные с помощью ';', '.', ',', ' '", "Ошибка!");
+            }
 
-            return ia;
+            return Array.Empty<int>();
         }
         public SubWindow()
         {
